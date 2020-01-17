@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+
+import { Comment } from '../comment/comment.entity';
 
 @Entity()
 export class Movie {
@@ -42,4 +44,10 @@ export class Movie {
 
   @Column()
   poster: string;
+
+  @OneToMany(
+    type => Comment,
+    comment => comment.movie,
+  )
+  comments: Array<Comment>;
 }
