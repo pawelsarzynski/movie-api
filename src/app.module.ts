@@ -8,20 +8,7 @@ import { CommentModule } from './comment/comment.module';
 import { MovieModule } from './movie/movie.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: '127.0.0.1',
-      port: 5432,
-      username: 'postgres',
-      password: '12345678',
-      database: 'movie_db',
-      entities: ['**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
-    CommentModule,
-    MovieModule,
-  ],
+  imports: [TypeOrmModule.forRoot(), CommentModule, MovieModule],
   controllers: [AppController],
   providers: [AppService],
 })

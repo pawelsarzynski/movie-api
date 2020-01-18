@@ -1,7 +1,7 @@
+import axios from 'axios';
 import { Injectable, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import axios from 'axios';
 
 import { Movie } from './movie.entity';
 import { plainToClass } from 'class-transformer';
@@ -16,15 +16,15 @@ export class MovieService {
     private readonly movieRepository: Repository<Movie>,
   ) {}
 
-  async create(movieDto) {
+  async create(title: string): Promise<Movie> {
     let movie;
 
     try {
-      movie = await this.getByTitle(movieDto.title);
+      movie = await this.getByTitle(title);
 
       if (!movie) {
         const { data } = await axios.get(
-          `http://www.omdbapi.com/?i=tt3896198&apikey=28af393c&t=${movieDto.title}`,
+          `http://www.omdbapi.com/?i=tt3896198&apikey=28af393c&t=${title}`,
         );
 
         if (data.Error) throw new Error(data.Error);
@@ -45,8 +45,18 @@ export class MovieService {
       const movie = await this.movieRepository.findOne(id, { relations: ['comments'] });
 
       return movie;
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      throw new HttpException(error.message, 500);
+    }
+  }
+
+  async getAll(): Promise<Array<Movie>> {
+    try {
+      const movies = await this.movieRepository.find();
+
+      return movies;
+    } catch (error) {
+      throw new HttpException(error.message, 500);
     }
   }
 
@@ -60,7 +70,7 @@ export class MovieService {
 
       return this.movieRepository.save(movieEntity);
     } catch (error) {
-      console.log(error);
+      throw new HttpException(error.message, 500);
     }
   }
 }

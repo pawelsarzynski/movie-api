@@ -18,6 +18,7 @@ export class MovieMapperImpl implements MovieMapper {
     const dto = new MovieDto();
 
     dto.id = domain.id;
+    dto.title = domain.title;
     dto.released = domain.released;
     dto.runtime = domain.runtime;
     dto.genre = domain.genre;
@@ -43,6 +44,7 @@ export class MovieMapperImpl implements MovieMapper {
     const domain = new Movie();
 
     domain.id = dto.id;
+    domain.title = dto.title;
     domain.released = dto.released;
     domain.runtime = dto.runtime;
     domain.genre = dto.genre;

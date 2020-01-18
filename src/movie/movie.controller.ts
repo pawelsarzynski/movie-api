@@ -21,18 +21,26 @@ export class MovieController {
 
   @UseInterceptors(ClassSerializerInterceptor)
   @Post()
-  async create(@Body() movie: MovieDto): Promise<MovieDto> {
-    const movieEntity = await this.movieService.create(movie);
+  async create(@Body('title') title: string): Promise<MovieDto> {
+    const movieEntity = await this.movieService.create(title);
     const movieDto = this.movieMapper.fromDomainToDto(movieEntity);
 
     return movieDto;
   }
 
-  @Get()
+  @Get(':id')
   async getMovie(@Param('id') id: string): Promise<MovieDto> {
     const movie = await this.movieService.getMovie(id);
     const movieDto = this.movieMapper.fromDomainToDto(movie);
 
     return movieDto;
+  }
+
+  @Get()
+  async getMovies(): Promise<Array<MovieDto>> {
+    const movies = await this.movieService.getAll();
+    const moviesDto = movies.map(movie => this.movieMapper.fromDomainToDto(movie));
+
+    return moviesDto;
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 
 import { CommentDto } from './comment.dto';
 import { CommentService } from './comment.service';
@@ -12,10 +12,19 @@ export class CommentController {
   ) {}
 
   @Post()
-  async create(@Body() comment: CommentDto) {
+  async create(@Body() comment: CommentDto): Promise<CommentDto> {
     const commentEntity = this.commentMapper.fromDtoToDomain(comment);
-    const newComment = await this.commentService.create(comment);
+    const newComment = await this.commentService.create(commentEntity);
+    const commentDto = this.commentMapper.fromDomainToDto(newComment);
 
-    return newComment;
+    return commentDto;
+  }
+
+  @Get(':id')
+  async getComment(@Param('id') id: string): Promise<CommentDto> {
+    const comment = await this.commentService.getComment(id);
+    const commentDto = this.commentMapper.fromDomainToDto(comment);
+
+    return commentDto;
   }
 }
