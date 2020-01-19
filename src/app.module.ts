@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 import { CommentModule } from './comment/comment.module';
 import { MovieModule } from './movie/movie.module';
 
-const PORT = process.env.PORT ? +process.env.PORT : 5432;
+const PORT = process.env.DB_PORT ? +process.env.DB_PORT : 5432;
 @Module({
   imports: [
     TypeOrmModule.forRoot({
