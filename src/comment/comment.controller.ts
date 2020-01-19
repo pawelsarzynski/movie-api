@@ -1,9 +1,11 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { CommentDto } from './comment.dto';
 import { CommentService } from './comment.service';
 import { CommentMapperImpl } from './comment.mapper';
 
+@ApiTags('Comment')
 @Controller('comment')
 export class CommentController {
   constructor(

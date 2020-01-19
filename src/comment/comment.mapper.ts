@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import * as R from 'ramda';
 
 import { Comment } from './comment.entity';
 import { CommentDto } from './comment.dto';
@@ -15,8 +16,7 @@ export class CommentMapperImpl implements CommentMapper {
 
     const dto = new CommentDto();
 
-    dto.id = domain.id;
-    dto.text = domain.text;
+    Object.assign(dto, R.pick(['id', 'text'], domain));
 
     if (domain.movie) {
       dto.movie = domain.movie.id;
@@ -33,9 +33,9 @@ export class CommentMapperImpl implements CommentMapper {
 
     movie.id = dto.movie;
 
-    domain.id = dto.id;
-    domain.text = dto.text;
     domain.movie = movie;
+
+    Object.assign(domain, R.pick(['id', 'text'], dto));
 
     return domain;
   }

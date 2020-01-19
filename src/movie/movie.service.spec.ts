@@ -68,4 +68,52 @@ describe('MovieService', () => {
       expect(result).toEqual(movieDomainFixture);
     });
   });
+
+  describe('getMovie', () => {
+    it('should find and return the movie', async () => {
+      jest.spyOn(movieRepository, 'findOne').mockResolvedValueOnce(movieDomainFixture);
+
+      const result = await movieService.getMovie('1');
+
+      expect(movieRepository.findOne).toHaveBeenCalledWith('1', { relations: ['comments'] });
+      expect(result).toEqual(movieDomainFixture);
+    });
+
+    it('should throw an error when the repository rejects', async () => {
+      jest.spyOn(movieRepository, 'findOne').mockRejectedValueOnce({ message: 'error' });
+
+      try {
+        expect(await movieService.getMovie('1')).toThrow();
+      } catch (error) {
+        expect(movieRepository.findOne).toHaveBeenCalledWith('1', { relations: ['comments'] });
+        expect(error.message).toBe('error');
+        expect(error.status).toBe(500);
+      }
+    });
+  });
+
+  describe('getAll', () => {
+    it('should get and return an array of movies', async () => {
+      jest
+        .spyOn(movieRepository, 'find')
+        .mockResolvedValueOnce([movieDomainFixture, movieDomainFixture]);
+
+      const result = await movieService.getAll();
+
+      expect(movieRepository.find).toHaveBeenCalled();
+      expect(result).toEqual([movieDomainFixture, movieDomainFixture]);
+    });
+
+    it('should throw an error when the repository rejects', async () => {
+      jest.spyOn(movieRepository, 'find').mockRejectedValueOnce({ message: 'error' });
+
+      try {
+        expect(await movieService.getAll()).toThrow();
+      } catch (error) {
+        expect(movieRepository.find).toHaveBeenCalled();
+        expect(error.message).toBe('error');
+        expect(error.status).toBe(500);
+      }
+    });
+  });
 });

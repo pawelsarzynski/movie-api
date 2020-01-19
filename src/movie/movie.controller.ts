@@ -7,11 +7,13 @@ import {
   Get,
   Param,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { MovieDto } from './movie.dto';
 import { MovieService } from './movie.service';
 import { MovieMapperImpl } from './movie.mapper';
 
+@ApiTags('Movie')
 @Controller('movie')
 export class MovieController {
   constructor(
